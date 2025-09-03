@@ -14,12 +14,12 @@ class Collection_Layer():
             all_data = raw_data.readlines()
             list_of_data = list()
             # 12 elements
-            # for i in range(1, len(all_data)):
-            #     line = all_data[i].rstrip("\n")
-            #     line_list = line.split(",")
-            #     list_of_data.append(line_list)
-            #     line_list = []
             list_of_data = [all_data[index].rstrip("\n").split(",") for index in range(1, len(all_data))]
+            for data in list_of_data:
+                if :
+                    # todo get index of the first regex and then get the element after ward combine and delete it..
+                print(data)
+                print()
             self._useable_data = list_of_data
             #self._useable_data = [data for data in list_of_data if re.findall() ]
 
