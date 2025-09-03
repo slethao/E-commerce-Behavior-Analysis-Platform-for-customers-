@@ -16,9 +16,14 @@ class Collection_Layer():
             # 12 elements
             list_of_data = [all_data[index].rstrip("\n").split(",") for index in range(1, len(all_data))]
             for data in list_of_data:
-                if :
-                    # todo get index of the first regex and then get the element after ward combine and delete it..
-                print(data)
+                helpful_part_one = re.findall("\"\[\d+", " ".join(data))
+                part_one_found = data.index("".join(helpful_part_one))
+                part_two_found = data[part_one_found+1]
+                full_helpful = f"{''.join(helpful_part_one)},{part_two_found}"
+                data[part_one_found] = full_helpful
+                data.remove(part_two_found)
+                    #NOTE get index of the first regex and then get the element after ward combine and delete it..
+                # print(data)
                 print()
             self._useable_data = list_of_data
             #self._useable_data = [data for data in list_of_data if re.findall() ]
