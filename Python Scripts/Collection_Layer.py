@@ -1,15 +1,31 @@
-import pandas
-
+import re 
 class Collection_Layer():
     def __init__(self, file_path):
         self._file_path = file_path
-        self._useable_data = ""
+        self._useable_data = list()
 
     #@slethao TODO method to verify the records 
     def verify_data(self):
+        """
+        Reviewer ID, ASIN, Reviewer Name, Helpful, Review Text, Overall Rating, Summary, Unix Review Time, Review Time, Day Difference, Helpful Yes, Total Votes
+        string, string, string, int, float, string, string, string, int, int, int
+        """
         with open(self._file_path, "r") as raw_data:
-            print(raw_data.readlines())
+            all_data = raw_data.readlines()
+            list_of_data = list()
+            # 12 elements
+            # for i in range(1, len(all_data)):
+            #     line = all_data[i].rstrip("\n")
+            #     line_list = line.split(",")
+            #     list_of_data.append(line_list)
+            #     line_list = []
+            list_of_data = [all_data[index].rstrip("\n").split(",") for index in range(1, len(all_data))]
+            self._useable_data = list_of_data
+            #self._useable_data = [data for data in list_of_data if re.findall() ]
 
     #@slethao TODO method to return verify records
     def get_verify_data(self):
+        return self._useable_data
+    
+    def get_useable_data(self):
         return self._useable_data
