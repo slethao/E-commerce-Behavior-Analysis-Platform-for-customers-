@@ -15,6 +15,8 @@ class Collection_Layer()    :
                             "day_diff": [],
                             "helpful_yes": [],
                             "total_vote": []}
+        self._missing_value_num = 0
+        self._missing_value = []
     
     def parse_and_remove_groups_front(self, group_key, value, line_list):
         self._group_map[group_key].append(value)
@@ -82,4 +84,32 @@ class Collection_Layer()    :
         if false == there is missing data
         if true == there is NO missing data
         """
-        return "" not in self._group_map[group]
+        verify_missing = False
+        if "" not in self._group_map[group] == False:
+            self._missing_value += 1
+            verify_missing = True
+        else:
+            missing_index = self._group_map[group].index("")
+            self._missing_value.append([self._group_map["reviewerID"][missing_index], self._group_map["asin"][missing_index], self._group_map["reviewerName"][missing_index] , self._group_map["helpful"][missing_index], self._group_map["reviewText"][missing_index], self._group_map["overall"][missing_index], self._group_map["summary"][missing_index], self._group_map["unixReviewTime"][missing_index], self._group_map["reviewTime"][missing_index], self._group_map["day_diff"][missing_index], self._group_map["helpful_yes"][missing_index], self._group_map["total_vote"][missing_index]])
+            # NOTE AFTER APPENDED REMOVE FROM THE MAPPING AND CEKCK TO SEE IF THE VALUES ARE STILLL EQUAL
+            self._group_map["reviewerID"].remove(self._group_map["reviewerID"][missing_index])
+            self._group_map["asin"].remove(self._group_map["asin"][missing_index])
+            self._group_map["reviewerName"].remove(self._group_map["reviewerName"][missing_index])
+            self._group_map["helpful"].remove(self._group_map["helpful"][missing_index])
+            self._group_map["reviewText"].remove(self._group_map["reviewText"][missing_index])
+            self._group_map["overall"].remove(self._group_map["overall"][missing_index])
+            self._group_map["summary"].remove(self._group_map["summary"][missing_index])
+            self._group_map["unixReviewTime"].remove(self._group_map["unixReviewTime"][missing_index])
+            self._group_map["reviewTime"].remove(self._group_map["reviewTime"][missing_index])
+            self._group_map["day_diff"].remove(self._group_map["day_diff"][missing_index])
+            self._group_map["helpful_yes"].remove(self._group_map["helpful_yes"][missing_index])
+            self._group_map["total_vote"].remove(self._group_map["total_vote"][missing_index])
+            
+            self._missing_value_num += 1
+        return verify_missing
+
+    def get_missing_num(self):
+        return self._missing_value_num
+    
+    def get_missing_values(self):
+        return self._missing_value
