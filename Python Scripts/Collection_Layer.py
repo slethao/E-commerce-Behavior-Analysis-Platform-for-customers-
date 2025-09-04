@@ -30,6 +30,7 @@ class Collection_Layer()    :
 
     def map_groups(self):
         for line in self._content:
+            #NOTE make this into a loop!
             splited_ls = line.split(",")
             alter_line = self.parse_and_remove_groups_front("reviewerID",splited_ls[0],splited_ls)
             alter_line_02 = self.parse_and_remove_groups_front("asin",splited_ls[0], alter_line)
