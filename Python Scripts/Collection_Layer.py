@@ -1,6 +1,6 @@
 import re 
 
-class Collection_Layer():
+class Collection_Layer()    :
     def __init__(self, content):
         self._content = content
         self._group_map = {"reviewerID": [],
@@ -52,7 +52,7 @@ class Collection_Layer():
     
     #@slethao TODO method to return verify records
     def verify_schema(self):
-        return self._useable_data
+        return len(self._group_map["reviewerID"]) == len(self._group_map["asin"]) == len(self._group_map["reviewerName"]) == len(self._group_map["helpful"]) == len(self._group_map["reviewText"]) == len(self._group_map["overall"]) == len(self._group_map["summary"]) == len(self._group_map["unixReviewTime"]) == len(self._group_map["reviewTime"]) == len(self._group_map["day_diff"]) == len(self._group_map["helpful_yes"]) == len(self._group_map["total_vote"])
     
     def verify_datatype(self):
         """
