@@ -54,12 +54,28 @@ class Collection_Layer()    :
     def verify_schema(self):
         return len(self._group_map["reviewerID"]) == len(self._group_map["asin"]) == len(self._group_map["reviewerName"]) == len(self._group_map["helpful"]) == len(self._group_map["reviewText"]) == len(self._group_map["overall"]) == len(self._group_map["summary"]) == len(self._group_map["unixReviewTime"]) == len(self._group_map["reviewTime"]) == len(self._group_map["day_diff"]) == len(self._group_map["helpful_yes"]) == len(self._group_map["total_vote"])
     
-    def verify_datatype(self):
+    def verify_datatype(self, group):
         """
         Reviewer ID, ASIN, Reviewer Name, Helpful, Review Text, Overall, Summary, Unix Review Time, Review Time, Day Difference, Helpful Yes, Total Votes
         string, string, string, string, string, float, string, string, string, string, int, int
         """
-        pass
-    
+        datatype_map = {"reviewerID": str,
+                            "asin": str,
+                            "reviewerName": str,
+                            "helpful": str,
+                            "reviewText": str,
+                            "overall": float,
+                            "summary": str,
+                            "unixReviewTime": str,
+                            "reviewTime": str,
+                            "day_diff": str,
+                            "helpful_yes": int,
+                            "total_vote": int}
+        correct_data_type = False
+        for value in self._group_map[group]:
+            if datatype_map[group] == type(datatype_map[group](value)):
+                correct_data_type = True
+        return correct_data_type   
+
     def verify_no_missing_values(self):
         pass
