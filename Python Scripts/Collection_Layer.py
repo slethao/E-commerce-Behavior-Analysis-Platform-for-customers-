@@ -77,5 +77,9 @@ class Collection_Layer()    :
                 correct_data_type = True
         return correct_data_type   
 
-    def verify_no_missing_values(self):
-        pass
+    def verify_no_missing_values(self, group):
+        """
+        if false == there is missing data
+        if true == there is NO missing data
+        """
+        return "" not in self._group_map[group]
