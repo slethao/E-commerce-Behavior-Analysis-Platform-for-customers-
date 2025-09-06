@@ -15,7 +15,6 @@ class Collection_Layer()    :
                             "day_diff": [],
                             "helpful_yes": [],
                             "total_vote": []}
-        self._missing_value_num = 0
     
     def parse_and_remove_groups_front(self, group_key, value, line_list):
         self._group_map[group_key].append(value)
