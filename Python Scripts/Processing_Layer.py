@@ -2,17 +2,28 @@ class Processing_layer():
     def __init__(self, group_map):
         super().__init__()
         self._group_map = group_map
-        self._missing_content = []
 
-    def handing_missing_data(self, csv_format, missing_list):
-        #if : # reviewerID, asin, reviewerName
-            pass
-        #if: # reviewText, summary
-            pass
-        #if : # overall, helpful, total_vote
-            pass
+    def handing_missing_data(self, record):
+        """
+        found_useless = False --> the record is filled completely
+        found_useless = True --> the record is NOT filled completely
+        """
+        # print(record)
+        found_useless = False
+        if record[0] == "" or record[1] == "" or record[2] == "": # reviewerID, asin, reviewerName (fake data) 0,1,2
+            found_useless = True
+        if record[4] == "" or record[6] == "": # reviewText, summary (nothing to look into) 4,6
+            found_useless = True
+        if record[5] == "" or record[10] == "" or record[11] == "": # overall, helpful, total_vote (imputation = fill missing value with the mean) 5,10,11
+            possible_missed = [record[5], record[10], record[11]]
+            print("hit me")
+            for i in range(len(possible_missed)):
+                group = possible_missed[i]
+                if group == "":
+                    self.imputation(self._group_map.values()[i], group)
         #NOTE you will update the map
         #NOTE return the altered_csv_format
+        return found_useless
 
     def remove_duplicates(self):
         pass #NOTE needs a condition statement
@@ -79,8 +90,20 @@ class Processing_layer():
     def get_data(self, index):
         return [self._group_map[key][index] for key in self._group_map]
     
-    def find_missing_dataset(self, csv_content):
-        self._missing_values = [line for line in csv_content if "" in line]
+    def imputation(self, num_records, group):
+        # just do the replacement here
+        summation = 0.0
+        for value in self._group_map[group]:
+            if value != "":
+                summation += float(value)
+        mean = summation/num_records
+        [mean if self._group_map[group][index] == "" else index for index in range(len(self._group_map[group]))]
+        
     
-    def get_missing_values(self):
-        return self._missing_values
+    def remove_record(self, index):
+        for group in self._group_map:
+            self._group_map[group].remove(self._group_map[group][index])
+    
+    def get_csv_format(self):
+        all_sorted_csv_format = [self.get_data(i) for i in range(len(self._group_map["reviewerID"]))]
+        return all_sorted_csv_format
