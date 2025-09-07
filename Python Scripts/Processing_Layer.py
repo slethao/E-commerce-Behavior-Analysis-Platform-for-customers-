@@ -70,9 +70,9 @@ class Processing_layer():
             else:
                 neg_counter += 1
                 neg_sum += float(line[5])
-        all_reviews.append(pos_sum / pos_counter)
-        all_reviews.append(neg_sum / neutral)
-        all_reviews.append(neg_sum / neg_counter)
+        all_reviews.append(f"Positive Setiment: {pos_sum / pos_counter}")
+        all_reviews.append(f"Neutral Setiment: {neutral_sum / neutral}")
+        all_reviews.append(f"Negative Setiment: {neg_sum / neg_counter}")
         return all_reviews
 
     def overall_review_product(self, csv_format):
