@@ -46,21 +46,49 @@ class Processing_layer():
     def text_cleaning(self):
         pass
 
-    def calculate_reviews(self):
+    def calculate_reviews(self, csv_format):
         # (e.g., 4-5 stars = positive, 1-2 stars = negative, 3 stars = neutral)
-        pass
+        # [positive, neutral, negative]
+        pos_counter = 0
+        pos_sum = 0
+        neutral = 0
+        neutral_sum = 0
+        neg_counter = 0
+        neg_sum = 0
+        all_reviews = []
+        for line in csv_format:
+            if float(line[5]) >= 4 and float(line[5]) <= 5:
+                pos_counter += 1
+                pos_sum += float(line[5])
+            elif float(line[5]) == 3.0:
+                neutral += 1
+                neutral_sum += float(line[5])
+            else:
+                neg_counter += 1
+                neg_sum += float(line[5])
+        all_reviews.append(pos_sum / pos_counter)
+        all_reviews.append(neg_sum / neutral)
+        all_reviews.append(neg_sum / neg_counter)
+        return all_reviews
 
-    def overall_review_product(self, asdf):
-        pass
-    
-    def get_content(self):
-        return self._content
+    def overall_review_product(self, csv_format):
         """
-        summarize the reviews to create an overall score on a product
+        caluculate a key tric, and that metric is the
+        average rating per product 
+        (calculte teh entrie project)
         """
+        # index 5
+        overall_rating_sum = 0.0
+        for line in csv_format:
+            rating = float(line[5])
+            overall_rating_sum += rating
+        return overall_rating_sum/len(csv_format)
     
     def get_data(self, index):
         return [self._group_map[key][index] for key in self._group_map]
     
-    def get_missing_dataset(self, csv_content):
+    def find_missing_dataset(self, csv_content):
         self._missing_values = [line for line in csv_content if "" in line]
+    
+    def get_missing_values(self):
+        return self._missing_values
