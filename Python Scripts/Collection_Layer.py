@@ -1,5 +1,4 @@
 import re 
-import Processing_Layer as pl
 class Collection_Layer()    :
     def __init__(self, content):
         self._content = content
