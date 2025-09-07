@@ -72,8 +72,8 @@ class Collection_Layer()    :
                             "day_diff": str,
                             "helpful_yes": int,
                             "total_vote": int}
-        correct_data_type = False
-        for value in self._group_map[group]:
-            if datatype_map[group] == type(datatype_map[group](value)):
-                correct_data_type = True
+        correct_data_type = True
+        for value in self._group_map[group.rstrip("\n")]:
+            if datatype_map[group.rstrip("\n")] != type(datatype_map[group.rstrip("\n")](value)):
+                correct_data_type = False
         return correct_data_type   
