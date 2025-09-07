@@ -44,10 +44,29 @@ class Processing_layer():
         self._content = { line for line in self._content }
 
     def text_cleaning(self):
-        pass
+        common_list = ["like", "you know", "I mean", "Well", "So", 
+                       "Right", "Basically", "very", "really", "literally", 
+                       "seriously", "totally", "completely", "absolutely",
+                       "in order to", "in order", "due to the fact that",
+                       "the fact that", "at the end of the day", "is",
+                       "believe", "think", "just", "that", "very", "anyway",
+                       "here", "thing", "when it comes to", "a", "an", "the",
+                       "and", "or", "but", "in", "on", "at", "with", "from",
+                       "I", "you", "he", "she", "it", "they", "is", "are", "was",
+                       "were", "be", "I've", "It", "\"I", "\"it", "But", "I'm", "A"
+                       ] #4 reviewText
+        tokenize_lines = [review for review in self._group_map["reviewText"]]
+        filter_lines = []
+        for review in tokenize_lines:
+            word_list = review.split()
+            for word in word_list:
+                if word in common_list:
+                    word_list.remove(word)
+            filter_lines.append(" ".join(word_list))
+        return filter_lines
 
     def calculate_reviews(self, csv_format):
-        # (e.g., 4-5 stars = positive, 1-2 stars = negative, 3 stars = neutral)
+        # e.g., 4-5 stars = positive, 1-2 stars = negative, 3 stars = neutral
         # [positive, neutral, negative]
         pos_counter = 0
         pos_sum = 0
@@ -77,7 +96,6 @@ class Processing_layer():
         average rating per product 
         (calculte teh entrie project)
         """
-        # index 5
         overall_rating_sum = 0.0
         for line in csv_format:
             rating = float(line[5])
