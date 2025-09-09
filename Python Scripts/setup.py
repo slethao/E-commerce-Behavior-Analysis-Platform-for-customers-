@@ -18,7 +18,8 @@ setup(
         'textblob',
         'os',
         'psycopg2',
-        'dotenv'
+        'dotenv',
+        're'
     ],
     python_requires=">=3.5",
 )
