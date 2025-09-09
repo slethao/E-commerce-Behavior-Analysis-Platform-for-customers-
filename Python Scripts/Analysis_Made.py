@@ -36,18 +36,15 @@ def main():
                                process_collect.calculate_reviews(all_sorted_csv_format),
                                process_collect.overall_review_product(all_sorted_csv_format),
                                csv_format_list_of_lines]
-            #NOTE for loop start
             file_name_list = ["Processed Data", "Sentiment Analysis", "Overall Mean", "Sorted Collection"]
-            # connection
+            
             for i in range(len(file_list)):
                 storage.set_table_name(file_name_list[i])
                 storage.set_file_path(file_list[i])
-                print(proccess_result[i])
-                print("****")
                 record_results(file_list[i], proccess_result[i])
-                #storage.convert_csv_to_table()
+                print("hit me")
+                storage.convert_csv_to_table()
 
-            #NOTE for loop end
         else:
             print("This data is unfit for consluding anything...")
     print("this works ^-^")
