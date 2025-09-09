@@ -16,7 +16,6 @@ class Processing_layer():
             found_useless = True
         if record[5] == "" or record[10] == "" or record[11] == "": # overall, helpful, total_vote (imputation = fill missing value with the mean) 5,10,11
             possible_missed = [record[5], record[10], record[11]]
-            print("hit me")
             for i in range(len(possible_missed)):
                 group = possible_missed[i]
                 if group == "":
@@ -70,9 +69,9 @@ class Processing_layer():
             else:
                 neg_counter += 1
                 neg_sum += float(line[5])
-        all_reviews.append(f"Positive Setiment: {pos_sum / pos_counter}")
-        all_reviews.append(f"Neutral Setiment: {neutral_sum / neutral}")
-        all_reviews.append(f"Negative Setiment: {neg_sum / neg_counter}")
+        all_reviews.append(f"Positive Setiment: {pos_sum / pos_counter}\n")
+        all_reviews.append(f"Neutral Setiment: {neutral_sum / neutral}\n")
+        all_reviews.append(f"Negative Setiment: {neg_sum / neg_counter}\n")
         return all_reviews
 
     def overall_review_product(self, csv_format):
@@ -85,7 +84,7 @@ class Processing_layer():
         for line in csv_format:
             rating = float(line[5])
             overall_rating_sum += rating
-        return overall_rating_sum/len(csv_format)
+        return f"The overall product review from amozon is {overall_rating_sum/len(csv_format)} stars."
     
     def get_data(self, index):
         return [self._group_map[key][index] for key in self._group_map]
@@ -105,5 +104,8 @@ class Processing_layer():
             self._group_map[group].remove(self._group_map[group][index])
     
     def get_csv_format(self):
-        all_sorted_csv_format = [self.get_data(i) for i in range(len(self._group_map["reviewerID"]))]
+        all_sorted_csv_format = [",".join(self.get_data(i)) for i in range(len(self._group_map["reviewerID"]))]
         return all_sorted_csv_format
+    
+    def set_value(self, new_content, group):
+        self._group_map[group] = new_content
