@@ -16,6 +16,9 @@ setup(
         'scikit-learn',
         'apache-airflow',
         'textblob',
+        'os',
+        'psycopg2',
+        'dotenv'
     ],
     python_requires=">=3.5",
 )
