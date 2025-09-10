@@ -1,6 +1,7 @@
 import Collection_Layer as cl
 import Processing_Layer as pl
 import Storage_Layer as sl
+import Query_Layer as ql
 
 def record_results(file_path, results):
     with open(file_path, "w") as content:
@@ -20,6 +21,7 @@ def main():
         file_list = [file_path_one, file_path_two, file_path_three, file_path_four]
         storage = sl.Storage_Layer(file_path_one, all_groups) #
         process_collect = pl.Processing_layer(groups_sorted)
+        query_obj = ql.Query_Layer()
         
         all_sorted_csv_format = [process_collect.get_data(i) for i in range(len(groups_sorted["reviewerID"]))]
         csv_format_list_of_lines = [",".join(process_collect.get_data(i)) for i in range(len(groups_sorted["reviewerID"]))]
@@ -36,14 +38,22 @@ def main():
                                process_collect.calculate_reviews(all_sorted_csv_format),
                                process_collect.overall_review_product(all_sorted_csv_format),
                                csv_format_list_of_lines]
-            file_name_list = ["Processed Data", "Sentiment Analysis", "Overall Mean", "Sorted Collection"]
-            
             for i in range(len(file_list)):
-                storage.set_table_name(file_name_list[i])
-                storage.set_file_path(file_list[i])
                 record_results(file_list[i], proccess_result[i])
-                print("hit me")
-                storage.convert_csv_to_table()
+
+            storage.convert_csv_to_table_overall("processed_data",
+                                                file_list[0],
+                                                all_groups) #NOTE processed_data.csv
+            storage.convert_csv_to_table_sentiment("sentiment_analysis", 
+                                                    file_list[1],
+                                                    ["positive","neutral","negative"]) #NOTE sentiment_analysis_review
+            storage.convert_csv_to_table_overall("sorted_collection",
+                                                    file_list[3],
+                                                    all_groups) #NOTE sorted_collection.csv
+
+            #print(f"These are the tables in postgres: {query_obj.view_table_content("processed_data")}") # work
+            # print(f"These are the tables in postgres: {query_obj.view_table_content("sentiment_analysis")}") # does not work
+            print(f"These are the tables in postgres: {query_obj.view_table_content("sorted_collection")}") # does not work
 
         else:
             print("This data is unfit for consluding anything...")
