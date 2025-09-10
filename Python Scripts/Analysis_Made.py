@@ -41,20 +41,17 @@ def main():
             for i in range(len(file_list)):
                 record_results(file_list[i], proccess_result[i])
 
-            storage.convert_csv_to_table_overall("processed_data",
-                                                file_list[0],
-                                                all_groups) #NOTE processed_data.csv
-            storage.convert_csv_to_table_sentiment("sentiment_analysis", 
-                                                    file_list[1],
-                                                    ["positive","neutral","negative"]) #NOTE sentiment_analysis_review
-            storage.convert_csv_to_table_overall("sorted_collection",
-                                                    file_list[3],
-                                                    all_groups) #NOTE sorted_collection.csv
-
-            #print(f"These are the tables in postgres: {query_obj.view_table_content("processed_data")}") # work
-            # print(f"These are the tables in postgres: {query_obj.view_table_content("sentiment_analysis")}") # does not work
-            print(f"These are the tables in postgres: {query_obj.view_table_content("sorted_collection")}") # does not work
-
+            #NOTE after break just figure out how to make it ony insert once...
+            storage.create_table_overall("processed_data", all_groups) #NOTE processed_data.csv
+            if storage.verify_table_filled("processed_data") == False:
+                storage.load_table_data("processed_data",
+                                        file_path_one,
+                                        all_groups) # tokenized data, text filtered and cleaned data
+                #print(f"These are the tables in postgres(proccessed_data): {query_obj.view_table_content("processed_data")}") # work
+                print(f"The number of records(proccessed_data): {len(query_obj.view_table_content("processed_data"))}")
+            else:
+                #print(f"These are the tables in postgres(proccessed_data): {query_obj.view_table_content("processed_data")}") # work
+                print(f"The number of records(proccessed_data): {len(query_obj.view_table_content("processed_data"))}")
         else:
             print("This data is unfit for consluding anything...")
     print("this works ^-^")
