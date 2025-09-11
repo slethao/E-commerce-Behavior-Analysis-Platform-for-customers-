@@ -47,34 +47,21 @@ class Transforming_Task():
         return unique_records
     
     #NOTE separte this so one function gets the keys and one puts in teh value
-    def mapped_group(self, all_groups, content):
-        valued_map = {all_groups[0]: [],
-                      all_groups[1]: [],
-                      all_groups[2]: [],
-                      all_groups[3]: [],
-                      all_groups[4]: [],
-                      all_groups[5]: [],
-                      all_groups[6]: [],
-                      all_groups[7]: [],
-                      all_groups[8]: [],
-                      all_groups[9]: [],
-                      all_groups[10]: [],
-                      all_groups[11]: []}
+    def creating_map_keys(self, groups):
+        valued_map = {}
+        for group in groups:
+            valued_map[group] = []
+        return valued_map
+    
+    def mapped_group(self, empty_map, content):
+        content_counter = 0
         for line in content:
             elements_list = line.split(",")
             temp = elements_list[3]
             elements_list[3] = f"{temp},{elements_list[4]}"
             elements_list.remove(elements_list[4])
-            valued_map[all_groups[0]].append(elements_list[0])
-            valued_map[all_groups[1]].append(elements_list[1])
-            valued_map[all_groups[2]].append(elements_list[2])
-            valued_map[all_groups[3]].append(elements_list[3])
-            valued_map[all_groups[4]].append(elements_list[4])
-            valued_map[all_groups[5]].append(elements_list[5])
-            valued_map[all_groups[6]].append(elements_list[6])
-            valued_map[all_groups[7]].append(elements_list[7])
-            valued_map[all_groups[8]].append(elements_list[8])
-            valued_map[all_groups[9]].append(elements_list[9])
-            valued_map[all_groups[10]].append(elements_list[10])
-            valued_map[all_groups[11]].append(elements_list[11])
-        return valued_map
+            for key in empty_map:
+                empty_map[key].append(elements_list[content_counter])
+                content_counter += 1
+            content_counter = 0
+        return empty_map
