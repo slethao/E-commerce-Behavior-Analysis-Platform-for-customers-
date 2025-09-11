@@ -15,14 +15,9 @@ class Query_Layer():
                                             port="5432")
         self._cursor = self._connection.cursor()
     
-    def view_table_content(self, table_name) -> list:
+    def view_table_content(self, table_name: str) -> list:
         try:
-            self._cursor.execute(f'SELECT * FROM "{table_name}";')
+            self._cursor.execute(f'SELECT * FROM {table_name};')
             return self._cursor.fetchall()
         except psycopg2.Error as e:
-            print(f"Table is unidentified")
             return e.pgerror
-    
-    #NOTE just add aupdate method here
-    def update_table(self):
-        pass
