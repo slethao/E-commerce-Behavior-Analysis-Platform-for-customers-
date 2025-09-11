@@ -4,7 +4,7 @@ class Transforming_Task():
     def __init__(self, temp_file_path):
         self._temp_file_path = temp_file_path # for the data that is sorted
 
-    def create_temp_file(self):
+    def create_temp_file(self) -> str:
         file_to_copy = self._temp_file_path
         copy_destination = "Temp_Folder/temp_amazon_reviews.csv"
         with open(copy_destination, "r") as data:
@@ -17,18 +17,18 @@ class Transforming_Task():
     #     return unique_records
 
     #NOTE use the text_cleaning for tokenized
-    def tokenize_data(self, mapped_data):
+    def tokenize_data(self, mapped_data: dict[str, str]) -> list:
         process = pl.Processing_layer(mapped_data)
         filter_data = process.text_cleaning()
         return filter_data
 
     #NOTE
-    def save_dataset(self, copy_file_file_path, content):
+    def save_dataset(self, copy_file_file_path: str, content: list[str]) -> None:
         #NOTE content = ["a\n","a\n","a\n"]
         with open(copy_file_file_path, "w") as altered_data:
             altered_data.writelines(content)
     
-    def missing_data(self, mapped_data, copy_file_file_path):
+    def missing_data(self, mapped_data: dict[str, list[str]], copy_file_file_path: str) -> list[str]:
         process = pl.Processing_layer(mapped_data)
         lines_in_csv = process.get_csv_format()
         unique_records = []
@@ -47,13 +47,13 @@ class Transforming_Task():
         return unique_records
     
     #NOTE separte this so one function gets the keys and one puts in teh value
-    def creating_map_keys(self, groups):
+    def creating_map_keys(self, groups: list[str]) -> dict[str, list[any]]:
         valued_map = {}
         for group in groups:
             valued_map[group] = []
         return valued_map
     
-    def mapped_group(self, empty_map, content):
+    def mapped_group(self, empty_map: dict[str, any], content: list[str]) -> dict[str, any]:
         content_counter = 0
         for line in content:
             elements_list = line.split(",")
