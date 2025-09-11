@@ -1,5 +1,5 @@
 import re 
-class Collection_Layer()    :
+class Collection_Layer():
     def __init__(self, content):
         self._content = content
         self._group_map = {"reviewerID": [],
@@ -76,3 +76,6 @@ class Collection_Layer()    :
             if datatype_map[group.rstrip("\n")] != type(datatype_map[group.rstrip("\n")](value)):
                 correct_data_type = False
         return correct_data_type   
+    
+    def set_content(self, new_content):
+        self._content = new_content

@@ -2,10 +2,7 @@ import Collection_Layer as cl
 import Processing_Layer as pl
 import Storage_Layer as sl
 import Query_Layer as ql
-
-def record_results(file_path, results):
-    with open(file_path, "w") as content:
-        content.writelines(results)
+import Data_Transforming as dt
 
 def main():
     file_path = "Batch Ingestion/Ingestion Layer/amazon_review.csv"
@@ -14,46 +11,40 @@ def main():
         content = data.readlines()
         collection = cl.Collection_Layer(content)
         groups_sorted = collection.map_groups() #NOTE use the data here for the next layer (proccessing)
-        file_path_one = "Batch Ingestion/Processing Layer/processed_data.csv" # this is for the processed data after the word filter
-        file_path_two = "Batch Ingestion/Processing Layer/sentiment_analysis_review.csv"
-        file_path_three = "Batch Ingestion/Processing Layer/overall_mean_review.csv"
         file_path_four = "Batch Ingestion/Collection Layer/sorted_collection.csv"
-        file_list = [file_path_one, file_path_two, file_path_three, file_path_four]
+        file_path_one = "Batch Ingestion/Processing Layer/processed_data.csv"
+
         storage = sl.Storage_Layer(file_path_one, all_groups) #
         process_collect = pl.Processing_layer(groups_sorted)
         query_obj = ql.Query_Layer()
+        transform_obj = dt.Transforming_Task(file_path_four)
+
+        #     #NOTE after break just figure out how to make it ony insert once...
+        #     storage.create_table_overall("processed_data", all_groups) #NOTE processed_data.csv
+        #     if storage.verify_table_filled("processed_data") == False:
+        #         storage.load_table_data("processed_data",
+        #                                 file_path_one,
+        #                                 all_groups) # tokenized data, text filtered and cleaned data
+        #         #print(f"These are the tables in postgres(proccessed_data): {query_obj.view_table_content("processed_data")}") # work
+        #         print(f"The number of records(proccessed_data): {len(query_obj.view_table_content("processed_data"))}")
+        #     else:
+        #         #print(f"These are the tables in postgres(proccessed_data): {query_obj.view_table_content("processed_data")}") # work
+        #         print(f"The number of records(proccessed_data): {len(query_obj.view_table_content("processed_data"))}")
         
-        all_sorted_csv_format = [process_collect.get_data(i) for i in range(len(groups_sorted["reviewerID"]))]
-        csv_format_list_of_lines = [",".join(process_collect.get_data(i)) for i in range(len(groups_sorted["reviewerID"]))]
-
         if collection.verify_schema() == True and len([group for group in all_groups if collection.verify_datatype_group(group) == True]) == 12:
-            for i in range(len(all_sorted_csv_format)):
-                line = all_sorted_csv_format[i]
-                if process_collect.handing_missing_data(line) == True:
-                    process_collect.remove_record(i)
-            altered_review_content = process_collect.text_cleaning()
-            process_collect.set_value(altered_review_content, "reviewText")
+            transform_obj.create_temp_file() #NOTE temp file is created
+            #NOTE missing data (groups_sorted)
+            unique_records = transform_obj.missing_data(groups_sorted, "Temp_Folder/temp_amazon_reviews_02.csv")
+            #NOTE tokenized (do this soon...)
+            mapped_content = transform_obj.mapped_group(all_groups, unique_records)
+            tokenize_records = transform_obj.tokenize_data(mapped_content) # NOTE update with this and put into file_path_one
             
-            proccess_result = [process_collect.get_csv_format(),
-                               process_collect.calculate_reviews(all_sorted_csv_format),
-                               process_collect.overall_review_product(all_sorted_csv_format),
-                               csv_format_list_of_lines]
-            for i in range(len(file_list)):
-                record_results(file_list[i], proccess_result[i])
+            for line in tokenize_records:
+                print(line)
+                print()
+            #NOTE create the condition before query to databsae..
 
-            #NOTE after break just figure out how to make it ony insert once...
-            storage.create_table_overall("processed_data", all_groups) #NOTE processed_data.csv
-            if storage.verify_table_filled("processed_data") == False:
-                storage.load_table_data("processed_data",
-                                        file_path_one,
-                                        all_groups) # tokenized data, text filtered and cleaned data
-                #print(f"These are the tables in postgres(proccessed_data): {query_obj.view_table_content("processed_data")}") # work
-                print(f"The number of records(proccessed_data): {len(query_obj.view_table_content("processed_data"))}")
-            else:
-                #print(f"These are the tables in postgres(proccessed_data): {query_obj.view_table_content("processed_data")}") # work
-                print(f"The number of records(proccessed_data): {len(query_obj.view_table_content("processed_data"))}")
-        else:
-            print("This data is unfit for consluding anything...")
+
     print("this works ^-^")
 
 main()
