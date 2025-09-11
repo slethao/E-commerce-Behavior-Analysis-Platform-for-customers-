@@ -1,14 +1,12 @@
-#NOTE create csv and put it into postgres
 import psycopg2
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 class Storage_Layer():
-    def __init__(self, file_path, columns):
+    def __init__(self, file_path: str, columns: list[str]):
         self._file_path = file_path
         self._table_name = ""
-        #NOTE after it works put into a .env file
         self._user_name = os.getenv("DB_USER_NAME")
         self._password = os.getenv("PASSWORD")
         self._database_name = os.getenv("DB_NAME")
@@ -19,9 +17,8 @@ class Storage_Layer():
         self._columns = columns #NOTE these are my group headers
         self._cursor = self._connection.cursor()
 
-    def load_table_data(self, table_name, file_path, columns):
+    def load_table_data(self, table_name: str, file_path: str, columns: list[str]) -> None:
         quoted_columns = [f'"{col.strip()}"' for col in columns]
-            # Build column definitions (adjust types as needed)
         print("File path: ", file_path)
         with open(file_path, 'r') as results:
             for line in results.readlines():
@@ -38,10 +35,9 @@ class Storage_Layer():
                         str(overall_listing[8]), int(overall_listing[9]), int(overall_listing[10]), int(overall_listing[11])
                     )
                 )
-                # print("table's data is updated")
                 self._connection.commit()
         
-    def create_table_overall(self,table_name, columns):
+    def create_table_overall(self,table_name: str, columns: list[str]) -> None:
         try:
             quoted_columns = [f'"{col.strip()}"' for col in columns]
             
@@ -59,7 +55,6 @@ class Storage_Layer():
                 f'{quoted_columns[10]} int',
                 f'{quoted_columns[11]} int'
             )
-            # print(f"Creating table: {table_name} with columns: {columns}")
             self._cursor.execute(
                 f'CREATE TABLE IF NOT EXISTS "{table_name}" (id serial PRIMARY KEY, {", ".join(column_defs)});'
                 )
@@ -67,6 +62,6 @@ class Storage_Layer():
         except psycopg2.Error as e:
             print(f"Error: {e.pgerror}")
 
-    def verify_table_filled(self, table_name):
+    def verify_table_filled(self, table_name: str) -> bool:
         self._cursor.execute(f'SELECT * FROM "{table_name}";')
         return bool(self._cursor.fetchall())
