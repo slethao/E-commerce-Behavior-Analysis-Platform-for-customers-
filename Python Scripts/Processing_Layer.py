@@ -1,9 +1,9 @@
 class Processing_layer():
-    def __init__(self, group_map):
+    def __init__(self, group_map: dict[str,list[str]]):
         super().__init__()
         self._group_map = group_map
 
-    def handing_missing_data(self, record):
+    def handing_missing_data(self, record: list[str]) -> bool:
         """
         found_useless = False --> the record is filled completely
         found_useless = True --> the record is NOT filled completely
@@ -27,7 +27,7 @@ class Processing_layer():
     # def remove_duplicates(self):
     #     pass #NOTE needs a condition statement
 
-    def text_cleaning(self):
+    def text_cleaning(self) -> list[str]:
         common_list = ["like", "you know", "I mean", "Well", "So", 
                        "Right", "Basically", "very", "really", "literally", 
                        "seriously", "totally", "completely", "absolutely",
@@ -49,7 +49,7 @@ class Processing_layer():
             filter_lines.append(" ".join(word_list))
         return filter_lines
 
-    def calculate_reviews(self, csv_format):
+    def calculate_reviews(self, csv_format: list[str]) -> list[str]:
         # e.g., 4-5 stars = positive, 1-2 stars = negative, 3 stars = neutral
         # [positive, neutral, negative]
         pos_counter = 0
@@ -74,7 +74,7 @@ class Processing_layer():
         all_reviews.append(f"{neg_sum / neg_counter}")
         return all_reviews
 
-    def overall_review_product(self, csv_format):
+    def overall_review_product(self, csv_format: list[str]) -> str:
         """
         caluculate a key tric, and that metric is the
         average rating per product 
@@ -89,7 +89,7 @@ class Processing_layer():
     def get_data(self, index):
         return [self._group_map[key][index] for key in self._group_map]
     
-    def imputation(self, num_records, group):
+    def imputation(self, num_records: int, group:list[str]) -> None:
         # just do the replacement here
         summation = 0.0
         for value in self._group_map[group]:
@@ -97,15 +97,14 @@ class Processing_layer():
                 summation += float(value)
         mean = summation/num_records
         [mean if self._group_map[group][index] == "" else index for index in range(len(self._group_map[group]))]
-        
     
-    def remove_record(self, index):
+    def remove_record(self, index: int) -> None:
         for group in self._group_map:
             self._group_map[group].remove(self._group_map[group][index])
     
-    def get_csv_format(self):
+    def get_csv_format(self) -> list[str]:
         all_sorted_csv_format = [",".join(self.get_data(i)) for i in range(len(self._group_map["reviewerID"]))]
         return all_sorted_csv_format
     
-    def set_value(self, new_content, group):
+    def set_value(self, new_content: list[str], group: str) -> None:
         self._group_map[group] = new_content
