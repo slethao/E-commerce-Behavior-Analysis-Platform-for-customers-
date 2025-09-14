@@ -11,10 +11,17 @@ class Transforming_Task():
             if data.readlines() == []:
                 shutil.copyfile(file_to_copy, copy_destination)
         return copy_destination
-    # def duplicates_be_gone(self, mapped_data):
-    #     process = pl.Processing_layer(mapped_data)
-    #     unique_records = process.remove_duplicates()
-    #     return unique_records
+    
+    def duplicates_be_gone(self, content: list[str]) -> list[str]:
+        #NOTE just look at reviewerID
+        all_id = list()
+        for line in content:
+            listed_record = line.split(",")
+            if listed_record[0] not in all_id:
+                all_id.append(listed_record[0])
+            else:
+                content.remove(line)
+        return content
 
     #NOTE use the text_cleaning for tokenized
     def tokenize_data(self, mapped_data: dict[str, str]) -> list:
