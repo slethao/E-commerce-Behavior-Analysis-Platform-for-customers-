@@ -1,7 +1,6 @@
 from nicegui import ui
 import FrontEnd.Charts as chart
-import FrontEnd.Record_Prob as a_prob
-
+import FrontEnd.Dialog as dia
 class Main_Application:
     def __init__(self, background_color, line_color, given_color, pos_percent, neg_percent, neutral_percent):
         self._background_color = background_color
@@ -10,6 +9,11 @@ class Main_Application:
         self._pos_percent = pos_percent
         self._neg_percent = neg_percent
         self._neutral_percent = neutral_percent
+        self._button_trigger = False
+        self._change_content = "this works"
+        self.toggle_state = True
+        self.options_on = {True: 'ON'}
+        self.options_off = {False: 'OFF'}
 
     def show_comments(self):
         # start part
@@ -37,24 +41,30 @@ class Main_Application:
                 self.set_given_color('#7b6582')
                 chart_obj.make_highlight_charts(self._background_color, self._line_color, self._given_color)
 
-    def show_record_sentiment_prob(self):
+    def show_record_sentiment_prob(self, content, classify_tool):
         # start part 
         with ui.card().classes('w-full h-[250px]').style('border: 2.5px solid #88607c; background-color: #170f18; border-radius: 20px;'): #NOTE background #291624
             with ui.column().classes('w-full'):
                 with ui.row().classes('mt-[-10px]'):
                     ui.label("This is the veidct box").style('color: #606688; font-size: 20px;').classes('mt-[10px]')
-                    reaction_obj = a_prob.Record_Prob('#886087', self._pos_percent , self._neg_percent, self._neutral_percent) # mood_color, pos_percent, neg_percent, neutral_percent
-                    reaction_obj.display_satisfied()
-                    reaction_obj.set_mood_color('#776088')
-                    reaction_obj.display_neutral()
-                    reaction_obj.set_mood_color('#686088')
-                    reaction_obj.display_dissatisfied()
                 with ui.row().classes('w-full'):
-                    with ui.scroll_area().classes('h-40 border').style(f'background-color: {self._background_color}; border-radius: 20px; border: 2px solid #47243e; font-size: 20px;'): # #291624 #47243e #6e4162
-                        ui.label('I scroll. I scroll. I scroll. I scroll. I scroll. I scroll. I scroll. I scroll. I scroll.' * 20).style("color: #8680ad;")
+                    with ui.scroll_area().classes('h-40 border').style('border-radius: 20px; border: 2px solid #47243e; font-size: 20px;'): 
+                        for i in range(len(content['reviewerName'])): # content['reviewerName'] # content['reviewText']
+                            review_txt = content['reviewText'][i]
+                            name = content['reviewerName'][i]
+                            overall_prob = classify_tool.prob_classify(review_txt)
+                            pos_prob = round(overall_prob.prob("pos") , 2)
+                            neutral_prob = round(overall_prob.prob("neutral") , 2)
+                            neg_prob = round(overall_prob.prob("neg") , 2)
+                            dialog_obj = dia.Dialog(name, pos_prob, neg_prob, neutral_prob)
+                            a_dialog = dialog_obj.create_dialog()
+                            with ui.button(color=self._background_color, on_click=lambda d=a_dialog: d.open()).classes('w-full').style('color: #6E93D6;') as item:
+                                ui.restructured_text(f'**User:** {name}').classes('w-full text-left').style("color: #8091ad;")
+                                ui.restructured_text(f'**Review Text:** {review_txt}').classes('w-full text-left').style("color: #8680ad;")
+                            ui.separator().style("background-color: #88607c;")
         # end part
 
-    def build_app(self):
+    def build_app(self, content, classify_tool):
         ui.query('body').style(f'background-color: {self._background_color};')
         with ui.row().classes('w-full justify-between items-center'):
             ui.label("Amozon Customer Sentimental Analysis on Reviews and Comments").style("font-weight: bold; font-size: 20px; color: #8a627e;")
@@ -67,6 +77,6 @@ class Main_Application:
             with ui.row().classes('w-full'):
                 self.show_comments()
                 self.show_star_review() 
-        self.show_record_sentiment_prob()
+        self.show_record_sentiment_prob(content, classify_tool)
         ui.run(port=5434)
         
