@@ -3,28 +3,74 @@ import FrontEnd.Charts as chart
 import FrontEnd.Dialog as dia
 import Processing_Layer as pl
 import os
+"""
+This class contains teh main appliation (the dashboard)
+"""
 class Main_Application:
-    def __init__(self, background_color, line_color, given_color):
+    __slots__ = ('background_color', 'line_color', 'given_color')
+
+    def __init__(self, background_color: str, line_color: str, given_color: str):
+        """
+        Constructor for the class 'Main_Application'
+
+        Parameters:
+            background_color (str): the hexacode that is used for the background color
+            line_color (str): the hexacode that is used for the gird color
+            given_color (str): the hexacode that is used for the axis and the graph descriptions
+        """
         self._background_color = background_color
         self._line_color = line_color
         self._given_color = given_color
 
-    def show_comments(self, comments_senti_data):
-        # start part
+    def show_comments(self, comments_senti_data: dict[str, int]) -> None:
+        """
+        This method display the sentimental analysis for the amozon review comments
+        in 2013 - 2014 (this returns nothing)
+            Parameter:
+                comments_senti_data (dict[str, int]): a dictionary with a key-value pair
+                            key: is the group of sentimental analysis teh value belongs
+                                    example: postive or negative
+                            vale: is the number of occurances found in the dataset
+        """
         with ui.card().classes('w-[700px] h-[475px] text-white').style('border: 2.5px solid #7b5e7b; background-color: #170f18; border-radius: 20px;'): #NOTE background-color: #271727
             ui.label("Sentimental Comments From 2013 and 2014").style("font-size: 25px; color: #c495ad; font-weight: bold;").classes('font-bold italic justify-center')
             ui.separator().style("background-color: #7b5e7b;")
             chart_obj = chart.Charts('#b39db7', '#9083a3', '#7e5479')
             chart_obj.make_highlight_charts(self._background_color, self._line_color, self._given_color, comments_senti_data)
 
-    def set_line_color(self, new_line_color):
+    def set_line_color(self, new_line_color: str) -> None:
+        """
+        This method is to modify the line color in the appliation
+        (this returns nothing)
+            Parameter:
+                new_line_color (str): the new hexacode that the program wants to use
+        """
         self._line_color = new_line_color
 
-    def set_given_color(self, new_given_color):
+    def set_given_color(self, new_given_color: str) -> None:
+        """
+        This method is to modify the given color in the appliation
+        (this returns nothing)
+            Parameter:
+                new_given_color (str): the new hexacode that the program wants to use
+        """
         self._given_color = new_given_color
 
-    def show_star_review(self, mapped_data, sentiment_star_data):
-        # start part
+    def show_star_review(self, mapped_data: dict[str, list[str]], sentiment_star_data: list[str]) -> None:
+        """
+        This method is used to display the 5-star reviews of the sentimental analysis
+        (this returns nothing)
+            Parameter:
+                mapped_data (dict[str, list[str]]): each key contains a group in from the filtered dataset that refernces 
+                                                    the data associated with that group
+                                                        example:
+                                                            mapped_data['reviewText'] = [all data related to reviewText/commnets]
+                                                            NOTE reviewText = the group in the filtered datset
+                sentiment_star_data (list[str]): a list of the sentimentla 5-star analysis of the overall dataset
+                                                    index 0: is the positive
+                                                    index 1: is the neutral
+                                                    index 2: is the negative 
+        """
         with ui.card().classes('w-[700px] h-[475px] no-border no-shadow').style('background-color: #170f18; border-radius: 20px;'): #NOTE #261b2a # border border: 2.5px solid #57435e;
             with ui.column().classes('w-full justify-center'):
                 with ui.row().classes('items-center justify-between'): # .classes('justify-center')
@@ -41,8 +87,24 @@ class Main_Application:
                                                 sentiment_star_data
                                                 )
 
-    def show_record_sentiment_prob(self, content, classify_tool, sentiment_star_data, comments_senti_data):
-        # start part 
+    def show_record_sentiment_prob(self, content: dict[str, list[str]], classify_tool: object, comments_senti_data: list[float, float, float]) -> None:
+        """
+        The method is used to display all the records that are in the filtered dataset
+        that are displayed in a scroll area that, once clikec you are able to see the 
+        sentimental analysis of each record when you clik on the a record siplayed in 
+        the dashboard (this returns none)
+            Parameter:
+                content (dict[str, list[str]]): each key contains a group in from the filtered dataset that refernces 
+                                                the data associated with that group
+                                                    example:
+                                                        mapped_data['reviewText'] = [all data related to reviewText/commnets]
+                                                        NOTE reviewText = the group in the filtered datset
+                classify_tool (object): an object used to call the textblob object to use to calucate teh record sentimenatl analysis
+                comments_senti_data (list[float, float, float]): listing of the sentimental analysis on comments for the record
+                                                                    index 0: is the positive
+                                                                    index 1: is the neutral
+                                                                    index 2: is the negative 
+        """
         with ui.card().classes('w-full h-[250px]').style('border: 2.5px solid #88607c; background-color: #170f18; border-radius: 20px;'): #NOTE background #291624
             with ui.column().classes('w-full'):
                 with ui.row().classes('mt-[-10px]'):
@@ -68,9 +130,23 @@ class Main_Application:
                             ui.separator().style("background-color: #88607c;")
         # end part
 
-    def build_app(self, content, classify_tool, sentiment_star_data, comments_senti_data):
+    def build_app(self, content: dict[str,list[str]], classify_tool: object, sentiment_star_data: list[str], comments_senti_data: dict[str, int]) -> None:
+        """
+        The method is used to build the dashboard and build all the main comments to the dashboard
+        (this returns none)
+            Parameter:
+                content (dict[str,list[str]]): the group is mapped to all the data that is associated with the group
+                classify_tool (object): the object that is use to refence all the trained adn test
+                                        data in order to do analysis on indicidual record
+                sentiment_star_data (list[str]): the listing for the sentimental analyis overall on the 5-star review
+                comments_senti_data (dict[str, int]): the sentimental analysis group refernce the number of times it
+                                                        it shows in the dataset
+                                                            example: 
+                                                                comments_senti_data['pos'] = number of times is shown
+                                                                comments_senti_data['neg'] = number of times is shown
+                                                            NOTE: number of times is shown is an integer value
+        """
         ui.query('body').style(f'background-color: {self._background_color};')
-        # session_obj = sc.SessionConfirmation()
 
         with ui.row().classes('w-full justify-between items-center'):
             ui.label("Amozon Customer Sentimental Analysis on Reviews and Comments").style("font-weight: bold; font-size: 20px; color: #8a627e;")
@@ -80,6 +156,6 @@ class Main_Application:
             with ui.row().classes('w-full'):
                 self.show_comments(comments_senti_data)
                 self.show_star_review(content, sentiment_star_data) 
-        self.show_record_sentiment_prob(content, classify_tool, sentiment_star_data, comments_senti_data)
+        self.show_record_sentiment_prob(content, classify_tool, comments_senti_data)
         ui.run(port=os.getenv("FRONT_END_PORT"))
         
