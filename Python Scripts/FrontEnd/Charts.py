@@ -1,7 +1,7 @@
 from nicegui import ui
 
 """
-summary fo the class
+This class is used to make charts
 """
 class Charts:
     __slots__ = ('positive_color', 'neutral_color', 'negative_color')
