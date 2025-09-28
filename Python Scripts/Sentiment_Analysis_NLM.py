@@ -18,6 +18,10 @@ class Sentiment_Analysis_NLM():
         80% --> training data
         20% --> testing data
     """
+
+    def get_classifier(self):
+        return self._classifier
+
     def get_star_reviews(self):
         process = pl.Processing_layer(self._group_map) #NOTE this takes in a map
         csv_format = process.get_csv_format()
@@ -36,6 +40,7 @@ class Sentiment_Analysis_NLM():
         for line in data:
             review_txt = line.split(",")[5]
             star_review = line.split(",")[6]
+            
             if float(star_review) <= float(review_senti_list[2].rstrip(",")):
                 formatted_list.append((review_txt, "neg"))
             if float(review_senti_list[2].rstrip(",")) < float(star_review) <= float(review_senti_list[0].rstrip(",")):
@@ -73,15 +78,12 @@ class Sentiment_Analysis_NLM():
         test_data = self.get_review_txt_test()
         return self._classifier.accuracy(test_data) # 0.8006103763987793
     
-    def record_into_csv(self):
-        all_records_prob_info = []
+    def record_the_comments(self):
+        all_records_prob_info = {"pos": 0, "neg": 0}
         for line in self._data:
             review_txt = line[0]
-            probability = self._classifier.prob_classify(review_txt)
-            pos_prob = round(probability.prob("pos"), 2)
-            neg_prob = round(probability.prob("neg"), 2)
-            neutral_prob = round(probability.prob("neutral"), 2)
-            all_records_prob_info.append([probability.max(), pos_prob, neg_prob, neutral_prob])
+            probability = self._classifier.classify(review_txt)
+            all_records_prob_info[probability] += 1
         return all_records_prob_info
 
 """ 

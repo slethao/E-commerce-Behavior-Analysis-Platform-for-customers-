@@ -24,9 +24,6 @@ class Processing_layer():
         #NOTE return the altered_csv_format
         return found_useless
 
-    # def remove_duplicates(self):
-    #     pass #NOTE needs a condition statement
-
     def text_cleaning(self) -> list[str]:
         common_list = ["like", "you know", "I mean", "Well", "So", 
                        "Right", "Basically", "very", "really", "literally", 
@@ -37,7 +34,8 @@ class Processing_layer():
                        "here", "thing", "when it comes to", "a", "an", "the",
                        "and", "or", "but", "in", "on", "at", "with", "from",
                        "I", "you", "he", "she", "it", "they", "is", "are", "was",
-                       "were", "be", "I've", "It", "\"I", "\"it", "But", "I'm", "A"
+                       "were", "be", "I've", "It", "\"I", "\"it", "But", "I'm", "A",
+                       "this", "it.", ".I", "This", "...", ".."
                        ] #4 reviewText
         tokenize_lines = [review for review in self._group_map["reviewText"]]
         filter_lines = []
@@ -69,9 +67,9 @@ class Processing_layer():
             else:
                 neg_counter += 1
                 neg_sum += float(line[5])
-        all_reviews.append(f"{pos_sum / pos_counter},")
-        all_reviews.append(f"{neutral_sum / neutral},")
-        all_reviews.append(f"{neg_sum / neg_counter}")
+        all_reviews.append(f"{round(pos_sum / pos_counter, 2)},")
+        all_reviews.append(f"{round(neutral_sum / neutral, 2)},")
+        all_reviews.append(f"{round(neg_sum / neg_counter, 2)}")
         return all_reviews
 
     def overall_review_product(self, csv_format: list[str]) -> str:
@@ -82,9 +80,9 @@ class Processing_layer():
         """
         overall_rating_sum = 0.0
         for line in csv_format:
-            rating = float(line[5])
+            rating = float(line.split(",")[6])
             overall_rating_sum += rating
-        return f"The overall product review from amozon is {overall_rating_sum/len(csv_format)} stars."
+        return round(overall_rating_sum/len(csv_format), 2)
     
     def get_data(self, index):
         return [self._group_map[key][index] for key in self._group_map]

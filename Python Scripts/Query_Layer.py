@@ -22,7 +22,7 @@ class Query_Layer():
         except psycopg2.Error as e:
             return e.pgerror
         
-    def format_to_csv(self, table_content):
+    def format_to_csv(self, table_content: list[tuple])-> list[str]:
         formatted_content = []
         record_line = ""
         for line in table_content:

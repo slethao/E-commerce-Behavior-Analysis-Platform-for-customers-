@@ -3,6 +3,7 @@ import Data_Transforming as dt
 import Storage_Layer as sl
 import Collection_Layer as cl
 import Processing_Layer as pl
+import Medallion_Model as mm
 
 @task
 def collection_task(content: list[str], groups: list[str]) -> dict[str, list[str]]:
@@ -33,14 +34,16 @@ def database_task(groups: list[str], file_path: str) -> None:
     if not storage.verify_table_filled("processed_data"):
         storage.load_table_data("processed_data", "Temp_Folder/temp_amazon_reviews_02.csv", groups)
 
+@task
+def medallion_architecture(all_groups: list[str]):
+    medallion = mm.Medallion_Model("processed_data", all_groups)
+    raw_content = medallion.get_bronze()
+    silver_content = medallion.transfer_to_silver(raw_content)
+    return medallion.transfer_to_gold(silver_content)
+
 @flow
 def create_the_dag(content: list[str], file_path: str, groups: list[str]) -> None:
     mapped_content = collection_task(content, groups)
     transform_task(mapped_content, file_path, groups)
     database_task(groups, file_path)
-
-"""
-sudo lsof -i tcp:4200
-kill -9 <PID>
-prefect server start (to see the task that are running)
-"""
+    return medallion_architecture(groups)
