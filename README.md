@@ -39,6 +39,12 @@ After you have done all these commands you should be able to execute:
 python Python\ Scripts/Analysis_Made.py
 ```
 
+or
+
+```bash
+python3 Python\ Scripts/Analysis_Made.py
+```
+
 ## Technologies Use
 
 Frameworks: Prefect and TextBlob
