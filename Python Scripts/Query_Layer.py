@@ -8,6 +8,8 @@ The class is used to represent
 the Query Layer in the Batch Ingestion
 """
 class Query_Layer():
+    __slots__ = ()
+
     def __init__(self):
         """
         The Constructor 'Query Layer'
