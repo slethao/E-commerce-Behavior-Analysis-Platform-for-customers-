@@ -10,6 +10,8 @@ This class represent the NLM that is performing
 sentimental analysis on review comments
 """
 class Sentiment_Analysis_NLM():
+    __slots__ = ('group_map')
+
     def __init__(self, group_map: dict[str, list[str]]):
         """
         The Constructor 'Sentiment_Analysis_NLM'
