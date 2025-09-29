@@ -4,6 +4,7 @@ The class that will hold the Collection
 Layer in Batch Ingestion
 """
 class Collection_Layer():
+    __slots__ = ('content')
     def __init__(self, content: list[str]):
         """
         Constructor for the class 'Collection Layer'
