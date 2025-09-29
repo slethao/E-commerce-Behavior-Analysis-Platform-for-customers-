@@ -3,8 +3,29 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+"""
+This class is to represent the Storage Layer
+in the Batch Ingestion
+"""
 class Storage_Layer():
+    __slots__ = ('file_path', 'columns')
+
     def __init__(self, file_path: str, columns: list[str]):
+        """
+        The Constructor 'Storage Layer'
+            Parameter:
+                file_path (str): the filepath of the file the program wants to store
+                columns (list[str]): the groups the table want to store
+            Private Members:
+                file path = contains the path of the file
+                table name = the name of the table that you want to store
+                user name = the username for the datasbase
+                password = the password used to access the database
+                database name = the name of the database 
+                connection = the connection to access the database
+                columns = the groups in the table
+                cursor = the cursor to edit objects in teh database
+        """
         self._file_path = file_path
         self._table_name = ""
         self._user_name = os.getenv("DB_USER_NAME")
@@ -18,6 +39,15 @@ class Storage_Layer():
         self._cursor = self._connection.cursor()
 
     def load_table_data(self, table_name: str, file_path: str, columns: list[str]) -> None:
+        """
+        The mehtod used to load the data into the table
+            Parameter:
+                table_name (str): the name of the table the program wants to load contents in 
+                file_path (str): the file path that is used to access the chosen file
+                columns (list[str]): the group in the table
+            Return:
+                None
+        """
         quoted_columns = [f'"{col.strip()}"' for col in columns]
         print("File path: ", file_path)
         with open(file_path, 'r') as results:
@@ -38,6 +68,14 @@ class Storage_Layer():
                 self._connection.commit()
         
     def create_table_overall(self,table_name: str, columns: list[str]) -> None:
+        """
+        The method is used to create an empty table.
+            Parameter:
+                table_name (str) -> the name of the table that the program wants to use
+                columns (list[str]) -> the groups used in the newly made table
+            Return:
+                None
+        """
         try:
             quoted_columns = [f'"{col.strip()}"' for col in columns]
             
@@ -63,5 +101,14 @@ class Storage_Layer():
             print(f"Error: {e.pgerror}")
 
     def verify_table_filled(self, table_name: str) -> bool:
+        """
+        This method verifies that the tables is filled with content.
+            Parameters:
+                table_name (str) = the name of the table you want to see
+                                    if it has content or not
+            Return:
+                True: the table has content
+                False: the table wither doesn't exisit or there is no content
+        """
         self._cursor.execute(f'SELECT * FROM "{table_name}";')
         return bool(self._cursor.fetchall())
