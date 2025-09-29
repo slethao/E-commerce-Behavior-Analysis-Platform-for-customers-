@@ -2,7 +2,7 @@
 
 This project does analysis on amazon customer reivews on
 various products from 2013 through 2014 using batch ingestions to create a Directed Acyclic Graph (DAG) that
-will format and securly store data that will be readily avaibale to use for the natural language model (NLM) that will be used to do sentimental analysi on the 5-star reivew and reviewer text comments.
+will format and securly store data that will be readily avaibale to use for the natural language model (NLM) that will be used to do sentimental analysis on the 5-star reivew and reviewer text comments.
 
 Groups in Dataset:
 | <span style="color:#c3b6fd;">Groups</span> | Description |
@@ -14,14 +14,14 @@ Groups in Dataset:
 | <span style="color:#c3b6fd;">reviewText</span> | The content of the review written by the customer. |
 | <span style="color:#c3b6fd;">overall rating</span> | The overall rating given to the product (ranging from 1 to 5 stars). |
 | <span style="color:#c3b6fd;">summary</span> | A breif summary of the review |
-| <span style="color:#c3b6fd;">unixReviewTime</span> | The time the review was psosted in Unix timestamp format. |
-| <span style="color:#c3b6fd;">reviewTime</span> | The time the review was posted in a reable date format |
-| <span style="color:#c3b6fd;">day_diff</span> | The number of days between the review date adn teh current date. |
+| <span style="color:#c3b6fd;">unixReviewTime</span> | The time the review was posted in Unix timestamp format. |
+| <span style="color:#c3b6fd;">reviewTime</span> | The time the review was posted in a readable date format |
+| <span style="color:#c3b6fd;">day_diff</span> | The number of days between the review date and the current date. |
 | <span style="color:#c3b6fd;">helpful_yes</span> | Number of positive helpful votes. |
-| <span style="color:#c3b6fd;">total_vote</span> | Total numbers of votes the review recieved. |
+| <span style="color:#c3b6fd;">total_vote</span> | Total numbers of votes the review received. |
 
 <a href="https://www.kaggle.com/datasets/mehmetisik/amazon-review">
-Click here to See the Dataset benig used
+Click here to See the Dataset being used
 </a>
 
 ## <span style="color: #86a0ba">Feauture<span>
