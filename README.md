@@ -1,10 +1,30 @@
-## E-commerce Behavior Analysis based on Customer's Commentary and Reviews
+## <span style="color: #86a0ba">E-commerce Behavior Analysis based on Customer's Commentary and Reviews</span>
 
 This project does analysis on amazon customer reivews on
 various products from 2013 through 2014 using batch ingestions to create a Directed Acyclic Graph (DAG) that
 will format and securly store data that will be readily avaibale to use for the natural language model (NLM) that will be used to do sentimental analysi on the 5-star reivew and reviewer text comments.
 
-## Feauture
+Groups in Dataset:
+| <span style="color:#c3b6fd;">Groups</span> | Description |
+| ------------- | ------------- |
+| <span style="color:#c3b6fd;">reviewerID</span> | The commenter's unique identifer for the reviewer. |
+| <span style="color:#c3b6fd;">asin</span> | Amazon Standard Identification Number for the product |
+| <span style="color:#c3b6fd;">reviewerName</span> | Name of the reviewer. |
+| <span style="color:#c3b6fd;">helpful</span> | Number of helpful votes the review recieved. |
+| <span style="color:#c3b6fd;">reviewText</span> | The content of the review written by the customer. |
+| <span style="color:#c3b6fd;">overall rating</span> | The overall rating given to the product (ranging from 1 to 5 stars). |
+| <span style="color:#c3b6fd;">summary</span> | A breif summary of the review |
+| <span style="color:#c3b6fd;">unixReviewTime</span> | The time the review was psosted in Unix timestamp format. |
+| <span style="color:#c3b6fd;">reviewTime</span> | The time the review was posted in a reable date format |
+| <span style="color:#c3b6fd;">day_diff</span> | The number of days between the review date adn teh current date. |
+| <span style="color:#c3b6fd;">helpful_yes</span> | Number of positive helpful votes. |
+| <span style="color:#c3b6fd;">total_vote</span> | Total numbers of votes the review recieved. |
+
+<a href="https://www.kaggle.com/datasets/mehmetisik/amazon-review">
+Click here to See the Dataset benig used
+</a>
+
+## <span style="color: #86a0ba">Feauture<span>
 
 - Batch Ingestion
 - Automated DAG
@@ -12,14 +32,14 @@ will format and securly store data that will be readily avaibale to use for the 
 - NLM
 - Front-End Dashboard
 
-## Installation
+## <span style="color: #86a0ba">Installation</span>
 
 ```
 source .venv/bin/activate
 pip -r install
 ```
 
-## Usage
+## <span style="color: #86a0ba">Usage</span>
 
 Command Line Instruction
 
@@ -45,10 +65,12 @@ or
 python3 Python\ Scripts/Analysis_Made.py
 ```
 
-## Technologies Use
+## <span style="color: #86a0ba">Technologies Use</span>
 
-Frameworks: Prefect and TextBlob
+<span style="color: #b39db7">Frameworks: </span>Prefect and TextBlob
 <br>
-Database: postgresSQL
+<span style="color: #b39db7">Database: </span>postgresSQL
 <br>
-Technologies: Docker and Python
+<span style="color: #b39db7">
+Technologies:
+</span> Docker and Python
