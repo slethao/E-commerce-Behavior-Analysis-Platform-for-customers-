@@ -44,12 +44,12 @@ pip -r install
 Command Line Instruction
 
 ```
-perfect start server
-docker compose up -d
 sudo lsof  -i: 5423
 kill -9 <PID> (all of them)
 suod lsof -i: 4200
 kill -9 <PID> (all of them)
+perfect start server
+docker compose up -d
 ```
 
 <br>
